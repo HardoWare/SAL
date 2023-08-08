@@ -1,0 +1,11 @@
+symfony new my_project_directory --version="6.3.*" --webapp
+
+composer require --dev symfony/maker-bundle
+composer require symfony/orm-pack
+composer require symfony/http-kernel
+
+
+
+
+
+id  remote_host  status     notification   time_stamp  log_status  log_message
