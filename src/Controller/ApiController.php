@@ -14,8 +14,8 @@ class ApiController extends AbstractController
     #[Route('/', name: '', methods: ['POST'])]
     public function index(Request $request, RemoteHostRepository $hostRepository): Response
     {
-        $hostName = $request->headers->get('REMOTE_HOST') ?? null;
-        $hostToken = $request->headers->get('HOST_TOKEN') ?? null;
+        $hostName = $request->headers->get('REMOTE_HOST');
+        $hostToken = $request->headers->get('HOST_TOKEN');
 
         if ($hostToken === null || $hostName === null) {
             return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
@@ -27,7 +27,7 @@ class ApiController extends AbstractController
 //        }
 //        $json = $request->getContent();
 
-        $body = json_decode($request->getContent(),true);
+        $body = json_decode($request->getContent(), true);
         $content = $body['logi'];
 
         return $this->json([
@@ -41,15 +41,14 @@ class ApiController extends AbstractController
         return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
     }
 
-    #[Route('/message/{name}', name: '.message', methods: ['GET', 'HEAD'])]
-    public function message($name): Response
+    #[Route('/message', name: '.message', methods: ['POST'])]
+    public function message(Request $request): Response
     {
+        //return $request->getContent();
         return $this->json([
-           'message' => 'mess ok',
-            'name' => $name
+            'request' => $request
         ]);
     }
-
 
 
 }

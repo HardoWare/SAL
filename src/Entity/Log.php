@@ -14,8 +14,9 @@ class Log
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $remoteHost = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?RemoteHost $remoteHost = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $status = null;
@@ -26,17 +27,23 @@ class Log
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $timeStamp = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $muteTime = null;
+
+    #[ORM\Column(type: Types::ARRAY)]
+    private array $logData = [];
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getRemoteHost(): ?string
+    public function getRemoteHost(): ?RemoteHost
     {
         return $this->remoteHost;
     }
 
-    public function setRemoteHost(string $remoteHost): static
+    public function setRemoteHost(RemoteHost $remoteHost): static
     {
         $this->remoteHost = $remoteHost;
 
@@ -79,14 +86,26 @@ class Log
         return $this;
     }
 
-    public function getLogStatus(): ?int
+    public function getMuteTime(): ?int
     {
-        return $this->log_status;
+        return $this->muteTime;
     }
 
-    public function setLogStatus(int $log_status): static
+    public function setMuteTime(int $muteTime): static
     {
-        $this->log_status = $log_status;
+        $this->muteTime = $muteTime;
+
+        return $this;
+    }
+
+    public function getLogData(): array
+    {
+        return $this->logData;
+    }
+
+    public function setLogData(array $logData): static
+    {
+        $this->logData = $logData;
 
         return $this;
     }
