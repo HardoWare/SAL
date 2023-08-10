@@ -15,17 +15,17 @@ class ApiController extends AbstractController
     public function index(Request $request, RemoteHostRepository $hostRepository): Response
     {
         $hostName = $request->headers->get('REMOTE_HOST');
-        $hostToken = $request->headers->get('HOST_TOKEN');
+        $bearerToken = $request->headers->get('authorization');
 
-        if ($hostToken === null || $hostName === null) {
+        if ($bearerToken === null || $hostName === null) {
             return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
         }
-
-//        $hostExist = $hostRepository->getHostByNameAndToken($hostName, $hostToken);
-//        if (!$hostExist) {
-//            return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
-//        }
-//        $json = $request->getContent();
+        $hostToken = str_replace("Bearer ", "", $bearerToken);
+        $hostExist = $hostRepository->getHostByNameAndToken($hostName, $hostToken);
+        if (!$hostExist) {
+            return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
+        }
+        $json = $request->getContent();
 
         $body = json_decode($request->getContent(), true);
         $content = $body['logi'];

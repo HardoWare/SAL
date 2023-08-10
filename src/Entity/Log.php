@@ -14,8 +14,7 @@ class Log
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: RemoteHost::class, )]
     private ?RemoteHost $remoteHost = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
@@ -86,12 +85,12 @@ class Log
         return $this;
     }
 
-    public function getMuteTime(): ?int
+    public function getMuteTime(): ?\DateTimeInterface
     {
         return $this->muteTime;
     }
 
-    public function setMuteTime(int $muteTime): static
+    public function setMuteTime(\DateTimeInterface $muteTime): static
     {
         $this->muteTime = $muteTime;
 
