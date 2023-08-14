@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="LaravelPintOptionsConfiguration">
+    <option name="ruleset" value="laravel" />
+  </component>
   <component name="MessDetectorOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
@@ -139,12 +142,14 @@
       <path value="$PROJECT_DIR$/vendor/twig/twig" />
       <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
-      <path value="$PROJECT_DIR$/vendor/willdurand/jsonp-callback-validator" />
-      <path value="$PROJECT_DIR$/vendor/willdurand/negotiation" />
-      <path value="$PROJECT_DIR$/vendor/friendsofsymfony/rest-bundle" />
       <path value="$PROJECT_DIR$/vendor/doctrine/data-fixtures" />
       <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
     </include_path>
+  </component>
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="127.0.0.1:8000" id="2ee496ff-8d77-455d-97e7-7822e5620ccc" name="127.0.0.1:8000" port="8000" />
+    </servers>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
   <component name="PhpStanOptionsConfiguration">

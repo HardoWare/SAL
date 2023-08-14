@@ -21,7 +21,7 @@ class RemoteHostRepository extends ServiceEntityRepository
         parent::__construct($registry, RemoteHost::class);
     }
 
-    public function getHostByNameAndToken($name, $token): bool
+    public function getHostByNameAndToken($name, $token): array
     {
         $qb = $this->createQueryBuilder('rh')
             ->select()

@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Log;
-use App\Entity\RemoteHost;
 use App\Repository\RemoteHostRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
