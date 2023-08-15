@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\RemoteHostRepository;
+use App\Service\ApiService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,30 +12,26 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiController extends AbstractController
 {
     #[Route('/', name: '', methods: ['POST'])]
-    public function index(Request $request, RemoteHostRepository $hostRepository): Response
+    public function index(Request $request, ApiService $apiService): Response
     {
-        $hostName = $request->headers->get('REMOTE_HOST');
-        $hostToken = $request->headers->get('HOST_TOKEN');
-
-        if ($hostToken === null || $hostName === null) {
+        $remoteHost = $apiService->requestAutorization($request);
+        if (!$remoteHost) {
             return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
         }
 
-        $hostExist = $hostRepository->getHostByNameAndToken($hostName, $hostToken);
+        $apiService->addLogiDoBazy($request);
 
-        if (!$hostExist) {
-            return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
-        }
-        $json = $request->getContent();
 
-        $body = json_encode($request->getContent(), true);
+
+        $body = json_decode($request->getContent(), true);
+
 
 
 
         return $this->json([
             'message' => Response::HTTP_OK,
-            'host' => $hostName,
-            'token' => $hostToken,
+//            'host' => $hostName,
+//            'token' => $hostToken,
             '$body' => $body,
         ]);
     }
@@ -43,67 +39,12 @@ class ApiController extends AbstractController
     #[Route('/message', name: '.message', methods: ['POST'])]
     public function message(Request $request): Response
     {
+
         //return $request->getContent();
         return $this->json([
             'request' => $request
         ]);
     }
-
-
 }
-
-/*
- *
-{
-    {
-        "id": 2,
-        "time_stamp": {
-            "date": "2023-08-09 13:17:59.000000",
-            "timezone_type": 3,
-            "timezone": "Europe\/Berlin"
-        },
-        "status": 1,
-        "message": "98"
-    },
-    {
-        "id": 4,
-        "time_stamp": {
-            "date": "2023-08-09 13:17:59.000000",
-            "timezone_type": 3,
-            "timezone": "Europe\/Berlin"
-        },
-        "status": 1,
-        "message": "70"
-    },
-    {
-        "id": 6,
-        "time_stamp": {
-            "date": "2023-08-09 13:17:59.000000",
-            "timezone_type": 3,
-            "timezone": "Europe\/Berlin"
-        },
-        "status": 1,
-        "message": "71"
-    },
-    {
-        "id": 8,
-        "time_stamp": {
-            "date": "2023-08-09 13:17:59.000000",
-            "timezone_type": 3,
-            "timezone": "Europe\/Berlin"
-        },
-        "status": 1,
-        "message": "13"
-    },
-    {
-        "id": 10,
-        "time_stamp": {
-            "date": "2023-08-09 13:17:59.000000",
-            "timezone_type": 3,
-            "timezone": "Europe\/Berlin"
-        },
-        "status": 1,
-        "message": "67"
-    }
-}
- */
+//  HOST_0
+//  0_uni64db8a53d203d

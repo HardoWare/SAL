@@ -21,6 +21,13 @@ class LogRepository extends ServiceEntityRepository
         parent::__construct($registry, Log::class);
     }
 
+    public function insertLogiDoBazy($logi): bool
+    {
+//        $qb = $this->createQueryBuilder('l')
+//            ->add()
+
+        return true;
+    }
 //    /**
 //     * @return Log[] Returns an array of Log objects
 //     */
