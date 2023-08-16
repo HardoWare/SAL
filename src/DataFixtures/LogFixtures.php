@@ -9,9 +9,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class LogFixtures extends Fixture
 {
-    public function __construct(private RemoteHostRepository $hostRepository) {
-
-    }
+    public function __construct(private RemoteHostRepository $hostRepository)
+    {}
     public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 20; $i++) {

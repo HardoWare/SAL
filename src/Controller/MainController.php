@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Log;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\LogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,17 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     #[Route('/', name: '.main', methods: ['GET', 'HEAD'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(LogRepository $logRepository): Response
     {
-//        $logs = $entityManager->getRepository(Log::class)->findAll();
-//
-//        if (!$logs) {
-//            throw $this->createNotFoundException("No logs found");
-//        }
+        $logs = $logRepository->selectIntLogowZError(10);
 
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
-            //'logs' => $logs,
+            'logs' => $logs,
         ]);
     }
 }

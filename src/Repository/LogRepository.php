@@ -21,12 +21,20 @@ class LogRepository extends ServiceEntityRepository
         parent::__construct($registry, Log::class);
     }
 
-    public function insertLogiDoBazy($logi): bool
+    public function selectIntLogowZError($ilosc): array
     {
-//        $qb = $this->createQueryBuilder('l')
-//            ->add()
-
-        return true;
+        $qb = $this->createQueryBuilder('l')
+            ->select()
+            ->join('l.remoteHost', 'rh')
+            ->addSelect('rh.name')
+            ->andWhere('l.status = :status')
+            ->setParameter(':status',1)
+            ->setFirstResult(0)
+            ->setMaxResults($ilosc)
+            ->orderBy('l.timeStamp', 'DESC')
+            ;
+        $query = $qb->getQuery();
+        return $query->getResult();
     }
 //    /**
 //     * @return Log[] Returns an array of Log objects

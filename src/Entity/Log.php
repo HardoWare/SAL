@@ -14,7 +14,7 @@ class Log
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: RemoteHost::class, )]
+    #[ORM\ManyToOne(targetEntity: RemoteHost::class)]
     private ?RemoteHost $remoteHost = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
@@ -26,7 +26,7 @@ class Log
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $timeStamp = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $muteTime = null;
 
     #[ORM\Column(type: Types::ARRAY)]

@@ -8,4 +8,21 @@ composer require symfony/http-kernel
 
 
 
-id  remote_host  status     notification   time_stamp  log_status  log_message
+id remote_host_id status notification time_stamp mute_time log_data
+
+#status
+0 - noerr
+1 - err
+2 - solved
+
+#notification
+0 - no
+1 - yes
+//2 - yes mute time
+
+#mute_time
+null - send
+date - no up to date
+
+#log_data
+array

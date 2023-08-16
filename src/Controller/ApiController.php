@@ -14,25 +14,23 @@ class ApiController extends AbstractController
     #[Route('/', name: '', methods: ['POST'])]
     public function index(Request $request, ApiService $apiService): Response
     {
-        $remoteHost = $apiService->requestAutorization($request);
+        $remoteHost = $apiService->requestAutorization();
         if (!$remoteHost) {
             return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
         }
-
-        $apiService->addLogiDoBazy($request);
-
-
+        $bb = json_decode($request->getContent(), true);
+        if ($bb) {
+            $apiService->zapiszLogiDoBazy($remoteHost);
+        }
+        else {
+            $apiService->zapiszPolaczenieDoBazy($remoteHost);
+        }
 
         $body = json_decode($request->getContent(), true);
 
-
-
-
         return $this->json([
             'message' => Response::HTTP_OK,
-//            'host' => $hostName,
-//            'token' => $hostToken,
-            '$body' => $body,
+            'body' => $body,
         ]);
     }
 
@@ -48,3 +46,6 @@ class ApiController extends AbstractController
 }
 //  HOST_0
 //  0_uni64db8a53d203d
+
+//  HOST_1
+//  1_uni64d4ba2273897

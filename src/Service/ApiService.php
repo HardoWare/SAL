@@ -2,43 +2,49 @@
 
 namespace App\Service;
 
+use App\Entity\RemoteHost;
 use App\Repository\LogRepository;
 use App\Repository\RemoteHostRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ApiService
 {
     public function __construct(
         private RemoteHostRepository $remoteHostRepository,
         private LogRepository $logRepository,
+        private RequestStack $requestStack,
+        private DatabaseInserterService $inserterService,
     )
     {
     }
 
-    public function requestAutorization($request): array|bool
+    public function requestAutorization(): ?RemoteHost
     {
-        $hostName = $request->headers->get('REMOTE_HOST');
-        $hostToken = $request->headers->get('HOST_TOKEN');
+        $currentRequest = $this->getCurrentRequest();
+        $hostName = $currentRequest->headers->get('REMOTE_HOST');
+        $hostToken = $currentRequest->headers->get('HOST_TOKEN');
 
         if ($hostToken === null || $hostName === null) {
-            return false;
+            return null;
         }
 
-        $hostExist = $this->remoteHostRepository->getHostByNameAndToken($hostName, $hostToken);
-        if ($hostExist != null) {
-            return $hostExist;
-        }
-        else {
-            return false;
-        }
+        $remoteHost = $this->remoteHostRepository->getHostByNameAndToken($hostName, $hostToken);
+        return $remoteHost;
     }
 
-    public function addLogiDoBazy($request): void
+    public function zapiszLogiDoBazy($remoteHost): void
     {
-        $logi = json_decode($request->getContent(), true);
-
-        $this->addLogiDoBazy($logi);
-
-
-        return;
+        $currentRequest = $this->getCurrentRequest();
+        $hostLogs = json_decode($currentRequest->getContent(), true);
+        $this->inserterService->insertPolaczenieZLogami($hostLogs, $remoteHost);
+    }
+    public function zapiszPolaczenieDoBazy($remoteHost): void
+    {
+        $this->inserterService->insertPolaczenie($remoteHost);
+    }
+    private function getCurrentRequest(): ?Request
+    {
+        return $this->requestStack->getCurrentRequest();
     }
 }
