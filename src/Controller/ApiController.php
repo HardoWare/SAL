@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\ApiService;
+use App\Service\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,22 +12,22 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api', name: 'app.api')]
 class ApiController extends AbstractController
 {
-    #[Route('/', name: '', methods: ['POST'])]
-    public function index(Request $request, ApiService $apiService): Response
+    #[Route('', name: '', methods: ['POST'])]
+    public function index(Request $request, ApiService $apiService, MailerService $mailerService): Response
     {
         $remoteHost = $apiService->requestAutorization();
         if (!$remoteHost) {
             return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
         }
-        $bb = json_decode($request->getContent(), true);
-        if ($bb) {
+        $body = json_decode($request->getContent(), true);
+        if ($body) {
             $apiService->zapiszLogiDoBazy($remoteHost);
         }
         else {
             $apiService->zapiszPolaczenieDoBazy($remoteHost);
         }
 
-        $body = json_decode($request->getContent(), true);
+        $mailerService->sendMail($body);
 
         return $this->json([
             'message' => Response::HTTP_OK,

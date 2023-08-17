@@ -25,8 +25,6 @@ class LogRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('l')
             ->select()
-            ->join('l.remoteHost', 'rh')
-            ->addSelect('rh.name')
             ->andWhere('l.status = :status')
             ->setParameter(':status',1)
             ->setFirstResult(0)

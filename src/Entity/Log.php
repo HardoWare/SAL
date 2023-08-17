@@ -109,4 +109,31 @@ class Log
         return $this;
     }
 
+    public function getRemoteHostName(): string
+    {
+        return $this->remoteHost->getName();
+    }
+
+    public function getTimeStampString(): string
+    {
+        return $this->getTimeStamp()->format("Y-m-d H:i:s");
+    }
+
+    public function getMuteTimeString(): string
+    {
+        return $this->getMuteTime()->format("Y-m-d H:i:s");
+    }
+
+    public function getLogDataTimeStamp(): string
+    {
+        $arr = $this->getLogData();
+        $date = $arr["time_stamp"];
+        return $date["date"];
+    }
+
+    public function getLogDataMessage(): string
+    {
+        $arr = $this->getLogData();
+        return $arr["message"];
+    }
 }
