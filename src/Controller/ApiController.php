@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api', name: 'app.api')]
 class ApiController extends AbstractController
 {
-    #[Route('', name: '', methods: ['POST'])]
+    #[Route('/', name: '', methods: ['POST'])]
     public function index(Request $request, ApiService $apiService, MailerService $mailerService): Response
     {
         $remoteHost = $apiService->requestAutorization();

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\LogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,15 +10,17 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/log', name: 'app.log')]
 class LogController extends AbstractController
 {
-    #[Route('', name: '', methods: ['GET'])]
-    public function index(): Response
+    #[Route('/', name: '', methods: ['GET'])]
+    public function index(LogRepository $logRepository): Response
     {
+        $logs = $logRepository->selectIntLogowZError(30);
+
         return $this->render('log/index.html.twig', [
-            'controller_name' => 'LogController',
+            'logs' => $logs,
         ]);
     }
 
-    #[Route('/create', name: '.create', methods: ['GET'])]
+    #[Route('/create', name: '.create', methods: ['GET', 'POST'])]
     public function create(): Response
     {
         return $this->render('log/create.html.twig', [
@@ -25,27 +28,33 @@ class LogController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: '.{id}', methods: ['GET', 'HEAD'])]
-    public function read(): Response
+    #[Route('/{id}', name: '.read', methods: ['GET'])]
+    public function read(int $id, LogRepository $logRepository): Response
     {
-        return $this->render('log/index.html.twig', [
-            'controller_name' => 'LogController',
+        $log = $logRepository->find($id);
+
+        return $this->render('log/read.html.twig', [
+            'log' => $log,
         ]);
     }
 
-    #[Route('/{id}/update', name: '.{id}.update', methods: ['PUT'])]
-    public function update(): Response
+    #[Route('/{id}/update', name: '.update', methods: ['GET','PUT'])]
+    public function update(int $id, LogRepository $logRepository): Response
     {
-        return $this->render('log/index.html.twig', [
-            'controller_name' => 'LogController',
+        $log = $logRepository->find($id);
+
+        return $this->render('log/update.html.twig', [
+            'log' => $log,
         ]);
     }
 
-    #[Route('/{id}/delete', name: '.{id}.delete', methods: ['DELETE'])]
-    public function delete(): Response
+    #[Route('/{id}/delete', name: '.delete', methods: ['DELETE'])]
+    public function delete(int $id, LogRepository $logRepository): Response
     {
-        return $this->render('log/index.html.twig', [
-            'controller_name' => 'LogController',
+        $log = $logRepository->find($id);
+
+        return $this->render('log/delete.html.twig', [
+
         ]);
     }
 }

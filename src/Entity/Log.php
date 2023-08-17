@@ -127,8 +127,7 @@ class Log
     public function getLogDataTimeStamp(): string
     {
         $arr = $this->getLogData();
-        $date = $arr["time_stamp"];
-        return $date["date"];
+        return $arr["time_stamp"];
     }
 
     public function getLogDataMessage(): string
