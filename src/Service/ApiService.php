@@ -10,18 +10,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ApiService
 {
     public function __construct(
-        private RemoteHostRepository $remoteHostRepository,
-        private RequestStack $requestStack,
-        private DatabaseInserterService $inserterService,
+        private readonly RemoteHostRepository    $remoteHostRepository,
+        private readonly RequestStack            $requestStack,
+        private readonly DatabaseInserterService $inserterService,
     )
     {
     }
 
-    public function requestAutorization(): ?RemoteHost
+    public function autoryzyjRequestIZwrocRemoteHost($hostName): ?RemoteHost
     {
         $currentRequest = $this->getCurrentRequest();
-        $hostName = $currentRequest->headers->get('REMOTE_HOST');
-        $hostToken = $currentRequest->headers->get('HOST_TOKEN');
+        $hostToken = $currentRequest->headers->get('X-AUTH-TOKEN');
 
         if ($hostToken === null || $hostName === null) {
             return null;

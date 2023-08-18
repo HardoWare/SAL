@@ -9,10 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/log', name: 'app.log')]
+#[IsGranted("ROLE_USER")]
 class LogController extends AbstractController
 {
     #[Route('/', name: '', methods: ['GET'])]
-    #[IsGranted()]
     public function index(LogRepository $logRepository): Response
     {
         $logs = $logRepository->selectIntLogowZError(30);
@@ -41,6 +41,7 @@ class LogController extends AbstractController
     }
 
     #[Route('/{id}/update', name: '.update', methods: ['GET','PUT'])]
+    #[IsGranted("ROLE_ADMIN")]
     public function update(int $id, LogRepository $logRepository): Response
     {
         $log = $logRepository->find($id);
@@ -51,6 +52,7 @@ class LogController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: '.delete', methods: ['DELETE'])]
+    #[IsGranted("ROLE_ADMIN")]
     public function delete(int $id, LogRepository $logRepository): Response
     {
         $log = $logRepository->find($id);

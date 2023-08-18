@@ -9,7 +9,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ApiVoter extends Voter
 {
-    public const INDEX = 'api.index';
+    const INDEX = 'API_INDEX';
+    const MESSAGE = 'API_MESSAGE';
 
     protected function __construct(
         private readonly RequestStack         $requestStack,
@@ -18,13 +19,17 @@ class ApiVoter extends Voter
     {}
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::INDEX]);
+        if (in_array($attribute, [self::INDEX, self::MESSAGE])) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $currentRequest = $this->requestStack->getCurrentRequest();
-        $hostName = $currentRequest->headers->get('REMOTE_HOST');
+        $hostName = $currentRequest->headers->get('X-REMOTE-HOST');
 
         if ($hostName === null) {
             return false;

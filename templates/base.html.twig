@@ -28,7 +28,7 @@
                                 <a class="nav-link" href="{{ path('app.log') }}">Baza logów</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app.login') }}">Użytkownicy</a>
+                                <a class="nav-link" href="{{ path('app.user.index') }}">Użytkownicy</a>
                             </li>
                         </ul>
                         <div class="navbar-nav d-flex">
@@ -37,7 +37,7 @@
                                     Profil
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="app.">Ustawienia</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app.user.settings') }}">Ustawienia</a></li>
                                     <li><a class="dropdown-item" href="{{ path('app.logout') }}">Wyloguj</a></li>
                                 </ul>
                             </li>

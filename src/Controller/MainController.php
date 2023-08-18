@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/', name: 'app')]
+#[IsGranted("ROLE_USER")]
 class MainController extends AbstractController
 {
     #[Route('/', name: '.main', methods: ['GET'])]

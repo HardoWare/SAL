@@ -16,22 +16,22 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ApiController extends AbstractController
 {
     #[Route('/{name}', name: '.index', methods: ['POST'])]
-    public function index(RemoteHost $remoteHost, Request $request, ApiService $apiService, MailerService $mailerService): Response
+    public function index(string $name, Request $request, ApiService $apiService, MailerService $mailerService): Response
     {
-        //$t = $this->denyAccessUnlessGranted("INDEX", $remoteHost);
-        $remoteHost = $apiService->requestAutorization();
+        $remoteHost = $apiService->autoryzyjRequestIZwrocRemoteHost($name);
+
         if (!$remoteHost) {
             return $this->json(['message' => Response::HTTP_UNAUTHORIZED]);
         }
+
         $body = json_decode($request->getContent(), true);
         if ($body) {
             $apiService->zapiszLogiDoBazy($remoteHost);
+            $mailerService->sendMail($body);
         }
         else {
             $apiService->zapiszPolaczenieDoBazy($remoteHost);
         }
-
-        $mailerService->sendMail($body);
 
         return $this->json([
             'message' => Response::HTTP_OK,
@@ -42,8 +42,6 @@ class ApiController extends AbstractController
     #[Route('/message', name: '.message', methods: ['POST'])]
     public function message(Request $request): Response
     {
-
-        //return $request->getContent();
         return $this->json([
             'request' => $request
         ]);
