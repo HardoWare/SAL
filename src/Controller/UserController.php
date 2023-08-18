@@ -2,50 +2,98 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\UserType;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/user', name: 'app.user')]
+#[Route('/user')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: '', methods: ['GET'])]
-    public function index(): Response
+    #[Route('/', name: 'app.user.index', methods: ['GET'])]
+    public function index(UserRepository $userRepository): Response
     {
         return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+            'users' => $userRepository->findAll(),
         ]);
     }
 
-    #[Route('/create', name: '.create', methods: ['GET'])]
-    public function create(): Response
+    #[Route('/new', name: 'app.user.new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app.user.index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('user/new.html.twig', [
+            'user' => $user,
+            'form' => $form,
         ]);
     }
 
-    #[Route('/update', name: '.update', methods: ['GET', 'HEAD'])]
-    public function update(): Response
+    #[Route('/{id}', name: 'app.user.show', methods: ['GET'])]
+    public function show(User $user): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+        return $this->render('user/show.html.twig', [
+            'user' => $user,
         ]);
     }
 
-    #[Route('/delete', name: '.delete', methods: ['DELETE'])]
-    public function delete(): Response
+    #[Route('/{id}/edit', name: 'app.user.edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app.user.index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
         ]);
     }
 
-    #[Route('/settings', name: '.settings', methods: ['GET'])]
-    public function settings(): Response
+    #[Route('/{id}', name: 'app.user.delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app.user.index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/settings', name: 'app.user.settings', methods: ['GET', 'POST'])]
+    public function settings(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(User1Type::class, $this->getUser());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app.user.index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('user/settings.html.twig', [
+            'user' => $user,
+            'form' => $form,
         ]);
     }
 }

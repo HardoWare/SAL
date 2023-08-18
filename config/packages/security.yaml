@@ -5,7 +5,7 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        app.user.provider:
             entity:
                 class: App\Entity\User
                 property: email
@@ -14,10 +14,19 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            pattern: ^/
             lazy: true
-            provider: app_user_provider
+            provider: app.user.provider
+            form_login:
+                login_path: app.login
+                check_path: app.login
+                enable_csrf: true
+            logout:
+                path: app.logout
+                target: app.login
+#            custom_authenticator: App\Security\LoginAuthenticator
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: [ROLE_USER]
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -28,8 +37,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/api, roles: PUBLIC_ACCESS }
+         - { path: ^/, roles: ROLE_USER }
+         - { path: ^/login, roles: PUBLIC_ACCESS }
+         - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:

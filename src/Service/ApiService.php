@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\RemoteHost;
-use App\Repository\LogRepository;
 use App\Repository\RemoteHostRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -12,7 +11,6 @@ class ApiService
 {
     public function __construct(
         private RemoteHostRepository $remoteHostRepository,
-        private LogRepository $logRepository,
         private RequestStack $requestStack,
         private DatabaseInserterService $inserterService,
     )
@@ -29,8 +27,7 @@ class ApiService
             return null;
         }
 
-        $remoteHost = $this->remoteHostRepository->getHostByNameAndToken($hostName, $hostToken);
-        return $remoteHost;
+        return $this->remoteHostRepository->getHostByNameAndToken($hostName, $hostToken);
     }
 
     public function zapiszLogiDoBazy($remoteHost): void

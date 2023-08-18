@@ -40,6 +40,10 @@
                             <td>{{ log.getLogdataTimeStamp }}</td>
                             <td>{{ log.getLogDataMessage }}</td>
                         </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">Brak rekordów w bazie!</td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                 </table>
