@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SAL | DB{% endblock %}
+
+{% block body %}
+    <main class="main">
+        <div class="container overflow-hidden">
+            <div class="row gy-5">
+                <div class="col-8">
+
+                </div>
+                <div class="col-4">
+                    <div>
+
+                    </div>
+                </div>
+                <div class="col-12">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Host</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Status Powiadomienia</th>
+                            <th scope="col">Data Otrzymania</th>
+                            <th scope="col">Czas wyciszenia</th>
+                            <th scope="col">Log Time Stamp</th>
+                            <th scope="col">Czas utworzenia logu</th>
+                            <th scope="col">Akcje</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for log in logs %}
+                            <tr>
+                                <th scope="row">{{ log.id }}</th>
+                                <td>{{ log.getRemoteHostName }}</td>
+                                <td>{{ log.status }}</td>
+                                <td>{{ log.notification }}</td>
+                                <td>{{ log.getTimeStampString }}</td>
+                                <td>{{ log.getMuteTimeString }}</td>
+                                <td>{{ log.getLogdataTimeStamp }}</td>
+                                <td>{{ log.getLogDataMessage }}</td>
+                                <a href="{{ path('app.log.show', {'id': log.id}) }}">show</a>
+                                <a href="{{ path('app.log.edit', {'id': log.id}) }}">edit</a>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

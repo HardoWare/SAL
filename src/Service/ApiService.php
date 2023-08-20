@@ -10,12 +10,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ApiService
 {
     public function __construct(
-        private readonly RemoteHostRepository    $remoteHostRepository,
-        private readonly RequestStack            $requestStack,
-        private readonly DatabaseInserterService $inserterService,
+        private readonly RemoteHostRepository $remoteHostRepository,
+        private readonly RequestStack         $requestStack,
+        private readonly DatabaseService      $databaseService,
     )
-    {
-    }
+    {    }
 
     public function autoryzyjRequestIZwrocRemoteHost($hostName): ?RemoteHost
     {
@@ -33,11 +32,11 @@ class ApiService
     {
         $currentRequest = $this->getCurrentRequest();
         $hostLogs = json_decode($currentRequest->getContent(), true);
-        $this->inserterService->insertPolaczenieZLogami($hostLogs, $remoteHost);
+        $this->databaseService->insertPolaczenieZLogami($hostLogs, $remoteHost);
     }
     public function zapiszPolaczenieDoBazy($remoteHost): void
     {
-        $this->inserterService->insertPolaczenie($remoteHost);
+        $this->databaseService->insertPolaczenie($remoteHost);
     }
     private function getCurrentRequest(): ?Request
     {

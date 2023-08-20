@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit RemoteHost{% endblock %}
+
+{% block body %}
+    <h1>Edit RemoteHost</h1>
+
+    {{ include('remote_host/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_remote_host_index') }}">back to list</a>
+
+    {{ include('remote_host/_delete_form.html.twig') }}
+{% endblock %}

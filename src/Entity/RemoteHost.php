@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\RemoteHostRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RemoteHostRepository::class)]
@@ -13,12 +14,17 @@ class RemoteHost
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     private ?string $token = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]    //TODO nullable false
+    private ?\DateTimeInterface $intervalStart = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]    //TODO nullable false
+    private ?\DateTimeInterface $intervalEnd = null;
 
     public function getId(): ?int
     {
@@ -49,4 +55,27 @@ class RemoteHost
         return $this;
     }
 
+    public function getIntervalStart(): ?\DateTimeInterface
+    {
+        return $this->intervalStart;
+    }
+
+    public function setIntervalStart(\DateTimeInterface $intervalStart): static
+    {
+        $this->intervalStart = $intervalStart;
+
+        return $this;
+    }
+
+    public function getIntervalEnd(): ?\DateTimeInterface
+    {
+        return $this->intervalEnd;
+    }
+
+    public function setIntervalEnd(\DateTimeInterface $intervalEnd): static
+    {
+        $this->intervalEnd = $intervalEnd;
+
+        return $this;
+    }
 }

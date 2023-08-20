@@ -1,54 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SAL | DB{% endblock %}
+{% block title %}Log index{% endblock %}
 
 {% block body %}
-    <main class="main">
-        <div class="container overflow-hidden">
-            <div class="row gy-5">
-                <div class="col-8">
+    <h1>Log index</h1>
 
-                </div>
-                <div class="col-4">
-                    <div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th scope="col">Host</th>
+                <th scope="col">Status</th>
+                <th scope="col">Status Powiadomienia</th>
+                <th scope="col">Data Otrzymania</th>
+                <th scope="col">Czas wyciszenia</th>
+                <th scope="col">Data utworzenia logu</th>
+                <th scope="col">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for log in logs %}
+            <tr>
+                <td>{{ log.id }}</td>
+                <td>{{ log.getRemoteHostName }}</td>
+                <td>{{ log.status }}</td>
+                <td>{{ log.notification }}</td>
+                <td>{{ log.timeStamp ? log.timeStamp|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ log.muteTime ? log.muteTime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ log.logTimeStamp ? log.muteTime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app.log.show', {'id': log.id}) }}">show</a>
+                    <a href="{{ path('app.log.edit', {'id': log.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Brak rekordów w bazie</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-                    </div>
-                </div>
-                <div class="col-12">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Remote Host</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Notification</th>
-                            <th scope="col">Time Stamp</th>
-                            <th scope="col">Mute Time</th>
-                            <th scope="col">Log Time Stamp</th>
-                            <th scope="col">Log Message</th>
-                            <th scope="col">Buttons</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for log in logs %}
-                            <tr>
-                                <th scope="row">{{ log.id }}</th>
-                                <td>{{ log.getRemoteHostName }}</td>
-                                <td>{{ log.status }}</td>
-                                <td>{{ log.notification }}</td>
-                                <td>{{ log.getTimeStampString }}</td>
-                                <td>{{ log.getMuteTimeString }}</td>
-                                <td>{{ log.getLogdataTimeStamp }}</td>
-                                <td>{{ log.getLogDataMessage }}</td>
-                                <td><button class="btn"><img src="{{ asset('images/lupe.ico') }}"></button></td>
-                                <td><button class="btn"><img src="{{ asset('images/lupe.ico') }}"></button></td>
-                                <td><button class="btn"><img src="{{ asset('images/lupe.ico') }}"></button></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </main>
 {% endblock %}

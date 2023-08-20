@@ -45,6 +45,14 @@ class RemoteHostRepository extends ServiceEntityRepository
         return $query->getOneOrNullResult();
     }
 
+    public function getAllRemoteHostsIdAndInterval(): array|null
+    {
+        $qb = $this->createQueryBuilder('rh')
+            ->select('rh.id', 'rh.intervalStart', 'rh.intervalEnd')
+        ;
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
 
 //    /**
 //     * @return RemoteHost[] Returns an array of RemoteHost objects

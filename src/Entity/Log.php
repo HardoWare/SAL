@@ -29,8 +29,11 @@ class Log
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $muteTime = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $logData = [];
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $logTimeStamp = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $logMessage = null;
 
     public function getId(): ?int
     {
@@ -97,16 +100,24 @@ class Log
         return $this;
     }
 
-    public function getLogData(): array
+    public function getLogTimeStamp(): ?\DateTimeInterface
     {
-        return $this->logData;
+        return $this->logTimeStamp;
     }
 
-    public function setLogData(array $logData): static
+    public function setLogTimeStamp(?\DateTimeInterface $logTimeStamp): void
     {
-        $this->logData = $logData;
+        $this->logTimeStamp = $logTimeStamp;
+    }
 
-        return $this;
+    public function getLogMessage(): ?string
+    {
+        return $this->logMessage;
+    }
+
+    public function setLogMessage(?string $logMessage): void
+    {
+        $this->logMessage = $logMessage;
     }
 
     public function getRemoteHostName(): string
@@ -114,26 +125,4 @@ class Log
         return $this->remoteHost->getName();
     }
 
-    public function getTimeStampString(): string
-    {
-        return $this->getTimeStamp()->format("Y-m-d H:i:s");
-    }
-
-    public function getMuteTimeString(): string
-    {
-        return $this->getMuteTime()->format("Y-m-d H:i:s");
-    }
-
-    public function getLogDataTimeStamp(): string
-    {
-        $arr = $this->getLogData();
-        $ts = $arr["time_stamp"];
-        return $ts["date"];
-    }
-
-    public function getLogDataMessage(): string
-    {
-        $arr = $this->getLogData();
-        return $arr["message"];
-    }
 }

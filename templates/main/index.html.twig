@@ -3,29 +3,59 @@
 {% block title %}SAL | Monitor{% endblock %}
 
 {% block body %}
-<main class="main">
+<main class="main mt-4">
     <div class="container overflow-hidden">
         <div class="row gy-5">
-            <div class="col-8">
-
-            </div>
-            <div class="col-4">
-                <div>
-
+            <div class="col-6 d-block">
+                <h3>Dzisiejsze zgłoszone błędy</h3>
+                <div class="col-2 bg">
+                    <div >
+                        <h4>{{ today }}</h4>
+                    </div>
                 </div>
             </div>
-            <div class="col-12">
+            <div class="col-6 d-block">
+                <div>
+                    <h3 class="">Ostatnie połączenia hostów</h3>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Host</th>
+                            <th scope="col">Data ostatniej aktywności</th>
+                            <th scope="col">Interwał aktywności</th>
+                            <th scope="col">Czas od poprzedniej aktywności</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for connection in connections %}
+                            <tr>
+                                <td>{{ connection.remoteHostName }}</td>
+                                <td>{{ connection.timeStamp }}</td>
+                                <td>{{ connection.interval }}</td>
+                                <td>{{ connection.timeDiff }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">Brak rekordów w bazie!</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-12 d-block">
+                <h3>Ostatnie błędy</h3>
                 <table class="table table-striped">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Remote Host</th>
+                        <th scope="col">Host</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Notification</th>
-                        <th scope="col">Time Stamp</th>
-                        <th scope="col">Mute Time</th>
-                        <th scope="col">Log Time Stamp</th>
-                        <th scope="col">Log Message</th>
+                        <th scope="col">Status Powiadomienia</th>
+                        <th scope="col">Data Otrzymania</th>
+                        <th scope="col">Czas wyciszenia</th>
+                        <th scope="col">Czas utworzenia logu</th>
+                        <th scope="col">Akcje</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -35,10 +65,13 @@
                             <td>{{ log.getRemoteHostName }}</td>
                             <td>{{ log.status }}</td>
                             <td>{{ log.notification }}</td>
-                            <td>{{ log.getTimeStampString }}</td>
-                            <td>{{ log.getMuteTimeString }}</td>
-                            <td>{{ log.getLogdataTimeStamp }}</td>
-                            <td>{{ log.getLogDataMessage }}</td>
+                            <td>{{ log.timeStamp ? log.timeStamp|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ log.muteTime ? log.muteTime|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ log.logTimeStamp ? log.logTimeStamp|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>
+                                <a href="{{ path('app.log.show', {'id': log.id}) }}">show</a>
+                                <a href="{{ path('app.log.edit', {'id': log.id}) }}">edit</a>
+                            </td>
                         </tr>
                     {% else %}
                         <tr>

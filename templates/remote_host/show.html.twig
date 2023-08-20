@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RemoteHost{% endblock %}
+
+{% block body %}
+    <h1>RemoteHost</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ remote_host.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ remote_host.name }}</td>
+            </tr>
+            <tr>
+                <th>Token</th>
+                <td>{{ remote_host.token }}</td>
+            </tr>
+            <tr>
+                <th>Interval</th>
+                <td>{{ remote_host.interval ? remote_host.interval.format('%y year(s), %m month(s), %d day(s)') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app.remote_host.index') }}">back to list</a>
+
+    <a href="{{ path('app.remote_host.edit', {'id': remote_host.id}) }}">edit</a>
+
+    {{ include('remote_host/_delete_form.html.twig') }}
+{% endblock %}

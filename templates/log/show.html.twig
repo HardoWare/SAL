@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log{% endblock %}
+
+{% block body %}
+    <h1>Log</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>#</th>
+                <td>{{ log.id }}</td>
+            </tr>
+            <tr>
+                <th>Host</th>
+                <td>{{ log.getRemoteHostName }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ log.status }}</td>
+            </tr>
+            <tr>
+                <th>Powiadomienia</th>
+                <td>{{ log.notification }}</td>
+            </tr>
+            <tr>
+                <th>Data Otrzymania</th>
+                <td>{{ log.timeStamp ? log.timeStamp|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Czas wyciszenia</th>
+                <td>{{ log.muteTime ? log.muteTime|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Data utworzenia logu</th>
+                <td>{{ log.logTimeStamp ? log.logTimeStamp|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Zawartość logu</th>
+                <td>{{ log.logMessage }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app.log.index') }}">Powrót do listy</a>
+
+    <a href="{{ path('app.log.edit', {'id': log.id}) }}">Edytuj</a>
+
+    {{ include('log/_delete_form.html.twig') }}
+{% endblock %}
