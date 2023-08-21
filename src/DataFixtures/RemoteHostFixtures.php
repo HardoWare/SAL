@@ -22,7 +22,7 @@ class RemoteHostFixtures extends Fixture
             $remote->setIntervalEnd($interval);
             $manager->persist($remote);
         }
-        $manager->flush();
+        //$manager->flush();
 
 
     }

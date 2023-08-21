@@ -29,10 +29,10 @@
                         <tbody>
                         {% for connection in connections %}
                             <tr>
-                                <td>{{ connection.remoteHostName }}</td>
-                                <td>{{ connection.timeStamp }}</td>
-                                <td>{{ connection.interval }}</td>
-                                <td>{{ connection.timeDiff }}</td>
+                                <td>{{ connection.remoteHostName|default('Not def') }}</td>
+                                <td>{{ connection.timeStamp|default('Not def') }}</td>
+                                <td>{{ connection.interval|default('Not def') }}</td>
+                                <td>{{ connection.timeDiff|default('Not def') }}</td>
                             </tr>
                         {% else %}
                             <tr>

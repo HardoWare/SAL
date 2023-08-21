@@ -38,13 +38,13 @@ class LogRepository extends ServiceEntityRepository
     }
 
 
-    public function selectIstatniLogRemoteHosta($remoteHost): ?Log
+    public function selectOstatniLogRemoteHosta($remoteHostId): ?Log
     {
         $qb = $this->createQueryBuilder('l')
             ->select()
             ->orderBy('l.timeStamp', 'DESC')
             ->andWhere('l.remoteHost = :remote_host')
-            ->setParameter('remote_host', $remoteHost)
+            ->setParameter('remote_host', $remoteHostId)
             ->setMaxResults(1)
             ;
         $query = $qb->getQuery();

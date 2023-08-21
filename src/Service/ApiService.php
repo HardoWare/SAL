@@ -4,8 +4,10 @@ namespace App\Service;
 
 use App\Entity\RemoteHost;
 use App\Repository\RemoteHostRepository;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiService
 {
@@ -32,14 +34,32 @@ class ApiService
     {
         $currentRequest = $this->getCurrentRequest();
         $hostLogs = json_decode($currentRequest->getContent(), true);
-        $this->databaseService->insertPolaczenieZLogami($hostLogs, $remoteHost);
+
+        $requestStatus = array_shift($hostLogs);
+        switch ($requestStatus) {
+            case $requestStatus["status"] == "error":
+                $this->databaseService->insertLogZStatusemError($hostLogs, $remoteHost);
+                break;
+            case $requestStatus["status"] == "ok":
+                $this->databaseService->insertPolaczenie($remoteHost);
+                break;
+            default:
+                $errorMessage = "No status parameter, unable to read values.";
+                $this->zapiszBladPolaczenia($remoteHost, $errorMessage);
+        }
     }
-    public function zapiszPolaczenieDoBazy($remoteHost): void
+
+    public function zapiszBladPolaczenia($remoteHost, $errorMessage): void
     {
-        $this->databaseService->insertPolaczenie($remoteHost);
+        $currentRequest = $this->getCurrentRequest();
+        $hostBody = "{$currentRequest->getContent()}";
+        $ts = "Content: {$hostBody} \nError message: {$errorMessage}";
+        $this->databaseService->insertBledyWRequescie($remoteHost, $ts);
     }
+
     private function getCurrentRequest(): ?Request
     {
         return $this->requestStack->getCurrentRequest();
     }
+
 }

@@ -9,21 +9,12 @@ use Doctrine\Persistence\ObjectManager;
 
 class LogFixtures extends Fixture
 {
-    public function __construct(private RemoteHostRepository $hostRepository)
+    public function __construct(private readonly RemoteHostRepository $hostRepository)
     {}
     public function load(ObjectManager $manager): void
     {
-        $json =  '[{
-                "id": 2,
-                "time_stamp": {
-                    "date": "2023-08-15 17:35:36.000000",
-                    "timezone_type": 3,
-                    "timezone": "Europe\/Berlin"
-                },
-                "status": 1,
-                "message": "86"
-            }]';
-        $data = json_decode($json, true);
+        $mess = ["mess1","mess2","mess3","mess4","mess5" ];
+
         for ($i = 0; $i < 20; $i++) {
             $rh = $i%5+1;
             $remoteHost = $this->hostRepository->find($rh);
@@ -34,11 +25,12 @@ class LogFixtures extends Fixture
             $log->setNotification($tf);
             $date = new \DateTime('now');
             $log->setTimeStamp($date);
-            $log->setMuteTime($date);
-            $log->setLogData([$data]);
+            $log->setLogTimeStamp($date);
+            $t = $i%5;
+            $log->setLogMessage($mess[$t]);
             $manager->persist($log);
         }
 
-        $manager->flush();
+        //$manager->flush();
     }
 }

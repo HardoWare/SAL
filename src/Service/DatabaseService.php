@@ -6,8 +6,12 @@ use App\Entity\Log;
 use App\Entity\RemoteHost;
 use App\Repository\LogRepository;
 use App\Repository\RemoteHostRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\EntityIdentityCollisionException;
+use Doctrine\ORM\Exception\ManagerException;
 use phpDocumentor\Reflection\Types\This;
+use Symfony\Component\Security\Core\Exception\AuthenticationServiceException;
 
 class DatabaseService
 {
@@ -18,7 +22,7 @@ class DatabaseService
     )
     {}
 
-    public function insertPolaczenieZLogami($hostLogs, RemoteHost $remoteHost): void
+    public function insertLogZStatusemError($hostLogs, RemoteHost $remoteHost): void
     {
 
         foreach ($hostLogs as $hostLog) {
@@ -33,7 +37,8 @@ class DatabaseService
             $log->setLogMessage($hostLog["message"]);
             $this->manager->persist($log);
         }
-        $this->manager->flush();
+            $this->manager->flush();
+
     }
     public function insertPolaczenie(RemoteHost $remoteHost): void
     {
@@ -43,31 +48,37 @@ class DatabaseService
         $log->setNotification(0);
         $date = new \DateTime('now');
         $log->setTimeStamp($date);
-        $log->setMuteTime($date);
-        $log->setLogData(["message"=>"200"]);
+        $log->setLogTimeStamp($date);
+        $log->setLogMessage("ok");
         $this->manager->persist($log);
         $this->manager->flush();
     }
 
     public function getOstatniePolaczeniaZApi(): array|null
     {
-        $remoteHosts = $this->remoteHostRepository->getAllRemoteHostsIdAndInterval();
+        $remoteHosts = $this->remoteHostRepository->findAll();
         $remoteHostsLastLog_arr = [];
         $date_now = new \DateTime("now");
         foreach ($remoteHosts as $remoteHost) {
-            $log = $this->logRepository->selectIstatniLogRemoteHosta($remoteHost["id"]);
-            $interval = $remoteHost["intervalEnd"]->diff($remoteHost["intervalStart"]);
-
-            $logTimeStamp_interval = clone $log->getTimeStamp();
-            $logTimeStamp_interval->add($interval);
-            $time_diff = $date_now->diff($logTimeStamp_interval);
-
-            $remoteHostsLastLog_arr[] = [
-                "remoteHostName" => $log->getRemoteHostName(),
-                "timeStamp" => $log->getTimeStamp()->format("Y-m-d H:i:s"),
-                "interval" => $interval->format("%H:%i:%s"),
-                "timeDiff" => $time_diff->format("%d days %H:%i:%s"),
+            $log = $this->logRepository->selectOstatniLogRemoteHosta($remoteHost->getId());
+            if ($log == null) {
+                $remoteHostsLastLog_arr[] = [
+                    "remoteHostName" => $remoteHost->getName(),
                 ];
+            }
+            else {
+                $interval = $remoteHost->getIntervalEnd()->diff($remoteHost->getIntervalStart());
+                $logTimeStamp_interval = clone $log->getTimeStamp();
+                $logTimeStamp_interval->add($interval);
+                $time_diff = $date_now->diff($logTimeStamp_interval);
+
+                $remoteHostsLastLog_arr[] = [
+                    "remoteHostName" => $log->getRemoteHostName(),
+                    "timeStamp" => $log->getTimeStamp()->format("Y-m-d H:i:s"),
+                    "interval" => $interval->format("%H:%i:%s"),
+                    "timeDiff" => $time_diff->format("%d days %H:%i:%s"),
+                ];
+            }
         }
         return $remoteHostsLastLog_arr;
     }
@@ -75,5 +86,19 @@ class DatabaseService
     public function getDzisiejseBledy(): array|null
     {
         return $this->logRepository->getDisiejszeLogiZError();
+    }
+
+    public function insertBledyWRequescie($remoteHost, $errorMessage): void
+    {
+        $log = new Log();
+        $log->setRemoteHost($remoteHost);
+        $log->setStatus(1);
+        $log->setNotification(1);
+        $date = new \DateTime('now');
+        $log->setTimeStamp($date);
+        $log->setLogTimeStamp($date);
+        $log->setLogMessage($errorMessage);
+        $this->manager->persist($log);
+        $this->manager->flush();
     }
 }
