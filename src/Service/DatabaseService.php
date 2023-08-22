@@ -71,12 +71,13 @@ class DatabaseService
                 $logTimeStamp_interval = clone $log->getTimeStamp();
                 $logTimeStamp_interval->add($interval);
                 $time_diff = $date_now->diff($logTimeStamp_interval);
+                $isInverted = $time_diff->invert;
 
                 $remoteHostsLastLog_arr[] = [
                     "remoteHostName" => $log->getRemoteHostName(),
-                    "timeStamp" => $log->getTimeStamp()->format("Y-m-d H:i:s"),
-                    "interval" => $interval->format("%H:%i:%s"),
-                    "timeDiff" => $time_diff->format("%d days %H:%i:%s"),
+                    "timeStamp" => $log->getTimeStamp(),
+                    "interval" => $interval,//->format("%H:%I:%S"),
+                    "timeDiff" => $time_diff,//->format("%R %d days %H:%I:%S"),
                 ];
             }
         }

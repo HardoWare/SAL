@@ -28,11 +28,11 @@
                         </thead>
                         <tbody>
                         {% for connection in connections %}
-                            <tr>
-                                <td>{{ connection.remoteHostName|default('Not def') }}</td>
-                                <td>{{ connection.timeStamp|default('Not def') }}</td>
-                                <td>{{ connection.interval|default('Not def') }}</td>
-                                <td>{{ connection.timeDiff|default('Not def') }}</td>
+                            <tr class="{{ connection.isInverted ? 'color: red' : '' }}">
+                                <td>{{ connection.remoteHostName|default('Brak Hosta') }}</td>
+                                <td>{{ connection.timeStamp ? connection.timeStamp|date('Y-m-d H:i:s') : 'Nie zdefiniowano' }}</td>
+                                <td>{{ connection.interval | default('Nie zdefiniowano') }}</td>
+                                <td>{{ connection.timeDiff | default('Nie zdefiniowano') }}</td>
                             </tr>
                         {% else %}
                             <tr>

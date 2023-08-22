@@ -28,7 +28,7 @@ class ApiController extends AbstractController
         }
 
         try {
-            $hostrLogs = json_decode($request->getContent(), true, 10,JSON_THROW_ON_ERROR);
+            $hostLogs = json_decode($request->getContent(), true, 10,JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             $apiService->zapiszBladPolaczenia($remoteHost, $e);
             return $this->json([
@@ -38,9 +38,10 @@ class ApiController extends AbstractController
 
         $apiService->zapiszLogiDoBazy($remoteHost);
 
-        if ($hostrLogs[0]["status"] == "error") {
+        if ($hostLogs[0]["status"] == "error") {
+            $subject = "Pojawił się błąd po stronie {$remoteHost->getName()}";
             try {
-                $mailerService->sendMail($hostrLogs);
+                $mailerService->sendMail($subject, $hostLogs);
             } catch (TransportExceptionInterface $e) {
                 throw new Exception($e);    //For now
             }
@@ -48,7 +49,7 @@ class ApiController extends AbstractController
 
         return $this->json([
             'message' => Response::HTTP_ACCEPTED,
-            'body' => $hostrLogs,
+            'body' => $hostLogs,
         ]);
     }
 

@@ -34,12 +34,12 @@ class CheckLatestActivityAndSendEmailsCommand extends Command
         $remoteHostLastLogs = $this->databaseService->getOstatniePolaczeniaZApi();
 
         foreach ($remoteHostLastLogs as $remoteHostLastLog) {
-            $rr = $remoteHostLastLog;
-            $logTimeStamp = new \DateTime( "{$remoteHostLastLog["timeStamp"]}");
-            list($H, $i, $s) = explode(":", $remoteHostLastLog["interval"]);
-            $intStr = "PT{$H}H{$i}i{$s}s";
-            $interval = new \DateInterval(sprintf('PT%dH%dM%dS', $H, $i, $s));
+            $timeDiff = $remoteHostLastLog["timeDiff"];
 
+            if ($timeDiff->invert) {
+
+
+            }
 
             $uooo = $remoteHostLastLog;
         }
