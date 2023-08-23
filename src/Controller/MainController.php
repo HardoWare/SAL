@@ -21,7 +21,6 @@ class MainController extends AbstractController
         $connections = $databaseService->getOstatniePolaczeniaZApi();
         $logs = $logRepository->selectIntLogowZError(5);
 
-
         return $this->render('main/index.html.twig', [
             'today' => $today,
             'connections' => $connections,
